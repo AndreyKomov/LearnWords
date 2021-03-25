@@ -30,8 +30,7 @@ router.put(
   validator(user, 'body'),
   multer.single('avatar'),
   async (req, res) => {
-    const userEntity = await userService.update(req.userId, req.body, req.file);
-    res.status(OK).send(userEntity.toResponse());
+    userService.update(req.userId, req.body, req.file, res);
   }
 );
 

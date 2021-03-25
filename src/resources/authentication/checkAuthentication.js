@@ -5,11 +5,11 @@ const {
 } = require('../../common/config');
 const { AUTHORIZATION_ERROR } = require('../../errors/appErrors');
 
-const ALLOWED_PATHS = ['/signin', '/signup'];
+const ALLOWED_PATHS = ['/signin', '/signup', '/', '/users', '/users/settings'];
 const DOC_PATH_REGEX = /^\/doc\/?$/;
 const DOC_PATH_RESOURCES_REGEX = /^\/doc\/.+$/;
 const WORDS_PATH_REGEX = /^\/words.*$/;
-const USERS_PATH = '/users';
+const USERS_PATH = '/users/id';
 
 function isOpenPath(path) {
   return (

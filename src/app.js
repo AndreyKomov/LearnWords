@@ -55,6 +55,11 @@ app.use('/words', wordRouter);
 
 app.use('/signin', signinRouter);
 
+app.use('/users/settings', (req, res, next) => {
+  res.send('Settings are running!');
+  next();
+});
+
 app.use('/users', userRouter);
 
 userRouter.use('/:id/tokens', userIdValidator, userTokenRouter);

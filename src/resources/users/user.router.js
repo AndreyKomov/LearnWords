@@ -1,6 +1,6 @@
 const { OK, NO_CONTENT } = require('http-status-codes');
 const router = require('express').Router();
-
+const multer = require('../../core/multer');
 const userService = require('./user.service');
 const { id, user } = require('../../utils/validation/schemas');
 const {
@@ -28,8 +28,9 @@ router.put(
   userIdValidator,
   validator(id, 'params'),
   validator(user, 'body'),
+  multer.single('avatar'),
   async (req, res) => {
-    const userEntity = await userService.update(req.userId, req.body);
+    const userEntity = await userService.update(req.userId, req.body, req.file);
     res.status(OK).send(userEntity.toResponse());
   }
 );

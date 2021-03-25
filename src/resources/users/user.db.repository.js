@@ -2,6 +2,7 @@ const User = require('./user.model');
 const { NOT_FOUND_ERROR, ENTITY_EXISTS } = require('../../errors/appErrors');
 const ENTITY_NAME = 'user';
 const MONGO_ENTITY_EXISTS_ERROR_CODE = 11000;
+const cloudinary = require('../../core/cloudinary');
 
 const getUserByEmail = async email => {
   const user = await User.findOne({ email });
@@ -33,8 +34,27 @@ const save = async user => {
   }
 };
 
-const update = async (id, user) =>
-  User.findOneAndUpdate({ _id: id }, { $set: user }, { new: true });
+const update = async (id, user, avatarImage, res) => {
+  cloudinary.v2.uploader
+    .upload_stream({ resource_type: 'auto' }, async (error, result) => {
+      if (error || !result) {
+        res.json(error);
+      }
+
+      const newData = {
+        ...user,
+        avatar: result.url || ''
+      };
+
+      const newUser = await User.Instance.findOneAndUpdate(
+        { _id: id },
+        { $set: newData },
+        { new: true }
+      ).select('-password');
+      res.json(newUser);
+    })
+    .end(avatarImage.buffer);
+};
 
 const remove = async id => User.deleteOne({ _id: id });
 

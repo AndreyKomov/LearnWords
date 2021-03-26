@@ -3,6 +3,7 @@ const { NOT_FOUND_ERROR } = require('../../errors/appErrors');
 
 const get = async userId => {
   const setting = await Settings.findOne({ userId });
+
   if (!setting) {
     throw new NOT_FOUND_ERROR('Cannot find setting');
   }

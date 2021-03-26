@@ -23,13 +23,13 @@ const errorHandler = require('./errors/errorHandler');
 const checkAuthentication = require('./resources/authentication/checkAuthentication');
 const { userIdValidator } = require('./utils/validation/validator');
 
+const multer = require('multer');
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
 
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-
 app.use(checkAuthentication);
 
 app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
@@ -52,11 +52,24 @@ app.use(
 );
 
 app.use('/words', wordRouter);
-
 app.use('/signin', signinRouter);
+app.use('/users/settings', (req, res, next) => {
+  if (req.originalUrl === '/users/settings') {
+    res.send('Settings are running!');
+    return;
+  }
+  next();
+});
+app.use('/static', express.static(`${__dirname}/public`));
+const upload = multer({ dest: 'uploads' });
+app.post('/upload', upload.single('filedata'), (req, res, next) => {
+  const filedata = req.file;
+  console.log(filedata);
+  if (!filedata) res.send('Error loading ');
+  else res.send('File is loaded');
+});
 
 app.use('/users', userRouter);
-
 userRouter.use('/:id/tokens', userIdValidator, userTokenRouter);
 
 userRouter.use('/:id/words', userIdValidator, userWordsRouter);

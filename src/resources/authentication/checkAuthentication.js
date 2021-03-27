@@ -15,7 +15,7 @@ const ALLOWED_PATHS = [
 const DOC_PATH_REGEX = /^\/doc\/?$/;
 const DOC_PATH_RESOURCES_REGEX = /^\/doc\/.+$/;
 const WORDS_PATH_REGEX = /^\/words.*$/;
-const USERS_PATH = '/users/id';
+const USERS_PATH = '/users';
 const DEMO_PATH_REGEX = /^\/demo\/?$/;
 const DEMO_PATH_RESOURCES_REGEX = /^\/demo\/.+$/;
 

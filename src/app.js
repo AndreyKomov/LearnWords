@@ -22,6 +22,7 @@ const settingRouter = require('./resources/settings/setting.router');
 const errorHandler = require('./errors/errorHandler');
 const checkAuthentication = require('./resources/authentication/checkAuthentication');
 const { userIdValidator } = require('./utils/validation/validator');
+
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -55,7 +56,7 @@ app.use(
 );
 
 app.use('/words', wordRouter);
-app.use('/signin', signinRouter);
+
 app.use('/static', express.static(`${__dirname}/public`));
 
 app.post('/upload', upload.single('filedata'), (req, res, next) => {
@@ -73,7 +74,7 @@ app.post('/upload', upload.single('filedata'), (req, res, next) => {
     }
   );
 });
-
+app.use('/signin', signinRouter);
 app.use('/users', userRouter);
 userRouter.use('/:id/tokens', userIdValidator, userTokenRouter);
 

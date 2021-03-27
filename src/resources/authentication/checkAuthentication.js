@@ -10,7 +10,6 @@ const ALLOWED_PATHS = [
   '/signin',
   '/signup',
   '/users',
-  '/users/settings',
   '/static/index.html',
   '/upload'
 ];

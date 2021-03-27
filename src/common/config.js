@@ -1,10 +1,15 @@
 const dotenv = require('dotenv');
 const path = require('path');
+const cloudinary = require('cloudinary').v2
 
 dotenv.config({
   path: path.join(__dirname, '../../.env')
 });
-
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 module.exports = {
   PORT: process.env.PORT,
   NODE_ENV: process.env.NODE_ENV,
@@ -16,5 +21,8 @@ module.exports = {
   JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
   JWT_EXPIRE_TIME: '4h',
   JWT_REFRESH_SECRET_KEY: process.env.JWT_REFRESH_SECRET_KEY,
-  JWT_REFRESH_EXPIRE_TIME: 4.5 * 60 * 60
+  JWT_REFRESH_EXPIRE_TIME: 4.5 * 60 * 60,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
 };

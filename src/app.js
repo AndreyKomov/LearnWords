@@ -22,8 +22,11 @@ const settingRouter = require('./resources/settings/setting.router');
 const errorHandler = require('./errors/errorHandler');
 const checkAuthentication = require('./resources/authentication/checkAuthentication');
 const { userIdValidator } = require('./utils/validation/validator');
-
 const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+const cloudinary = require('cloudinary');
+
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
 
@@ -53,20 +56,27 @@ app.use(
 
 app.use('/words', wordRouter);
 app.use('/signin', signinRouter);
-app.use('/users/settings', (req, res, next) => {
-  if (req.originalUrl === '/users/settings') {
-    res.send('Settings are running!');
-    return;
-  }
-  next();
-});
 app.use('/static', express.static(`${__dirname}/public`));
-const upload = multer({ dest: 'uploads' });
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 app.post('/upload', upload.single('filedata'), (req, res, next) => {
   const filedata = req.file;
-  console.log(filedata);
+  const buf = filedata.buffer.toString('base64');
   if (!filedata) res.send('Error loading ');
-  else res.send('File is loaded');
+  else res.send('File was successfully load');
+  cloudinary.uploader.upload(
+    `data:image/png;base64,${buf}`,
+    result => {
+      console.log(result);
+    },
+    {
+      folder: 'Avatars'
+    }
+  );
 });
 
 app.use('/users', userRouter);

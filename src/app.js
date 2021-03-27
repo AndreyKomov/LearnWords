@@ -58,11 +58,6 @@ app.use('/words', wordRouter);
 app.use('/signin', signinRouter);
 app.use('/static', express.static(`${__dirname}/public`));
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
 app.post('/upload', upload.single('filedata'), (req, res, next) => {
   const filedata = req.file;
   const buf = filedata.buffer.toString('base64');
@@ -71,7 +66,7 @@ app.post('/upload', upload.single('filedata'), (req, res, next) => {
   cloudinary.uploader.upload(
     `data:image/png;base64,${buf}`,
     result => {
-      console.log(result);
+      console.log(result.url);
     },
     {
       folder: 'Avatars'

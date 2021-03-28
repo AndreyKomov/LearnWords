@@ -23,11 +23,6 @@ const errorHandler = require('./errors/errorHandler');
 const checkAuthentication = require('./resources/authentication/checkAuthentication');
 const { userIdValidator } = require('./utils/validation/validator');
 
-const multer = require('multer');
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-const cloudinary = require('cloudinary');
-
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
 
@@ -59,21 +54,6 @@ app.use('/words', wordRouter);
 
 app.use('/static', express.static(`${__dirname}/public`));
 
-/* app.post('/upload', upload.single('filedata'), (req, res, next) => {
-  const filedata = req.file;
-  const buf = filedata.buffer.toString('base64');
-  if (!filedata) res.send('Error loading ');
-  else res.send('File was successfully load');
-  cloudinary.uploader.upload(
-    `data:image/png;base64,${buf}`,
-    result => {
-      console.log(result.url);
-    },
-    {
-      folder: 'Avatars'
-    }
-  );
-}); */
 app.use('/signin', signinRouter);
 app.use('/users', userRouter);
 userRouter.use('/:id/tokens', userIdValidator, userTokenRouter);

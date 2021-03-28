@@ -11,27 +11,13 @@ const {
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
-const cloudinary = require('cloudinary');
 
 router.post(
   '/',
   validator(user, 'body'),
   upload.single('filedata'),
   async (req, res) => {
-    const filedata = req.file;
-    const buf = filedata.buffer.toString('base64');
-/*     if (!filedata) res.send('Error loading ');
-    else res.send('File was successfully load'); */
-    cloudinary.uploader.upload(
-      `data:image/png;base64,${buf}`,
-      result => {
-        console.log(result.url);
-      },
-      {
-        folder: 'Avatars'
-      }
-    );
-    const userEntity = await userService.save(req.body);
+    const userEntity = await userService.save(req.body, req.file);
     res.status(OK).send(userEntity.toResponse());
   }
 );

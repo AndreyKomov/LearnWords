@@ -59,7 +59,7 @@ app.use('/words', wordRouter);
 
 app.use('/static', express.static(`${__dirname}/public`));
 
-app.post('/upload', upload.single('filedata'), (req, res, next) => {
+/* app.post('/upload', upload.single('filedata'), (req, res, next) => {
   const filedata = req.file;
   const buf = filedata.buffer.toString('base64');
   if (!filedata) res.send('Error loading ');
@@ -73,7 +73,7 @@ app.post('/upload', upload.single('filedata'), (req, res, next) => {
       folder: 'Avatars'
     }
   );
-});
+}); */
 app.use('/signin', signinRouter);
 app.use('/users', userRouter);
 userRouter.use('/:id/tokens', userIdValidator, userTokenRouter);

@@ -13,10 +13,28 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const cloudinary = require('cloudinary');
 
-router.post('/', validator(user, 'body'), async (req, res) => {
-  const userEntity = await userService.save(req.body);
-  res.status(OK).send(userEntity.toResponse());
-});
+router.post(
+  '/',
+  validator(user, 'body'),
+  upload.single('filedata'),
+  async (req, res) => {
+    const filedata = req.file;
+    const buf = filedata.buffer.toString('base64');
+/*     if (!filedata) res.send('Error loading ');
+    else res.send('File was successfully load'); */
+    cloudinary.uploader.upload(
+      `data:image/png;base64,${buf}`,
+      result => {
+        console.log(result.url);
+      },
+      {
+        folder: 'Avatars'
+      }
+    );
+    const userEntity = await userService.save(req.body);
+    res.status(OK).send(userEntity.toResponse());
+  }
+);
 
 router.get(
   '/:id',
@@ -48,21 +66,5 @@ router.delete(
     res.sendStatus(NO_CONTENT);
   }
 );
-/* router.post('/upload', upload.single('filedata'), (req, res, next) => {
-  console.log(req.params.id);
-  const filedata = req.file;
-  const buf = filedata.buffer.toString('base64');
-  if (!filedata) res.send('Error loading ');
-  else res.send('File was successfully load');
-  cloudinary.uploader.upload(
-    `data:image/png;base64,${buf}`,
-    result => {
-      console.log(result.url);
-    },
-    {
-      folder: 'Avatars'
-    }
-  );
-});
- */
+
 module.exports = router;
